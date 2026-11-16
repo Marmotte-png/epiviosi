@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1826"/>
+      <stop offset="1" stop-color="#1d3b56"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g transform="translate(340 320) scale(0.47)">
+    <circle cx="128" cy="128" r="116" fill="#12263a" stroke="#e8b04b" stroke-width="8"/>
+    <circle cx="128" cy="128" r="84" fill="none" stroke="#e8b04b" stroke-width="3" stroke-dasharray="6 10"/>
+    <path d="M128 36 L148 128 L128 220 L108 128 Z" fill="#e8b04b"/>
+    <path d="M36 128 L128 112 L220 128 L128 144 Z" fill="#7fa6c4"/>
+    <circle cx="128" cy="128" r="12" fill="#12263a" stroke="#e8b04b" stroke-width="4"/>
+  </g>
+  <text x="400" y="480" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold"
+        font-size="28" letter-spacing="8" fill="#f1ede4">EPIVÍOSI</text>
+</svg>
