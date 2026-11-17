@@ -79,7 +79,8 @@ make_wiki_img() {
   echo "Copie de ${#zims[@]} ZIM dans .vm/wiki.img…"
   cp "${zims[@]}" "$mp/"
   udisksctl unmount --no-user-interaction -b "$dev" >/dev/null
-  udisksctl loop-delete --no-user-interaction -b "$dev" >/dev/null
+  # udisks libère souvent le périphérique loop dès le démontage.
+  udisksctl loop-delete --no-user-interaction -b "$dev" >/dev/null 2>&1 || true
 }
 
 if [ "$wiki" = 1 ]; then
