@@ -48,6 +48,7 @@ in
     Session live : l'utilisateur « ${user} » n'a pas de mot de passe.
     Persistance : lancez « sudo epiviosi-persist-setup » pour créer la partition EPIVIOSI-DATA.
     Wiki hors-ligne : « sudo epiviosi-wiki-setup --size 60G » crée la partition EPIV-WIKI (fichiers .zim).
+    Cartes hors-ligne : « sudo epiviosi-maps-setup --size 8G » puis « epiviosi-maps-fetch » (France).
   '';
 
   users.users.${user} = {

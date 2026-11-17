@@ -7,10 +7,14 @@
       url = "github:Marmotte-png/epiviosi-wiki";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    epiviosi-maps = {
+      url = "github:Marmotte-png/epiviosi-maps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs, epiviosi-wiki, ... }:
+    { self, nixpkgs, epiviosi-wiki, epiviosi-maps, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -23,6 +27,7 @@
         modules = [
           ./hosts/live-iso.nix
           epiviosi-wiki.nixosModules.default
+          epiviosi-maps.nixosModules.default
           { nixpkgs.overlays = [ self.overlays.default ]; }
         ];
       };
