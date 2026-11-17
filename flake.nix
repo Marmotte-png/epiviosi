@@ -11,10 +11,14 @@
       url = "github:Marmotte-png/epiviosi-maps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    epiviosi-security = {
+      url = "github:Marmotte-png/epiviosi-security";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs, epiviosi-wiki, epiviosi-maps, ... }:
+    { self, nixpkgs, epiviosi-wiki, epiviosi-maps, epiviosi-security, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -28,6 +32,7 @@
           ./hosts/live-iso.nix
           epiviosi-wiki.nixosModules.default
           epiviosi-maps.nixosModules.default
+          epiviosi-security.nixosModules.default
           { nixpkgs.overlays = [ self.overlays.default ]; }
         ];
       };

@@ -14,6 +14,7 @@ Système live hors-ligne basé sur NixOS (x86_64), socle de la suite EPIVÍOSI :
 - Amnésique par défaut ; persistance optionnelle via une partition `EPIVIOSI-DATA`
 - **EPIVÍOSI WIKI** : Wikipédia et autres archives ZIM hors-ligne (Kiwix), sur une partition `EPIV-WIKI`
 - **EPIVÍOSI MAPS** : cartes OpenStreetMap, recherche et itinéraires hors-ligne (Organic Maps), sur une partition `EPIV-MAPS`
+- **EPIVÍOSI SECURITY** : clés USB et fichiers chiffrés, nettoyage des métadonnées, guide et documentation hors-ligne
 - Pare-feu actif, pas de serveur SSH, réglages noyau durcis
 
 ## Prérequis (machine de construction)
@@ -100,6 +101,15 @@ epiviosi-maps-fetch --list             # autres pays disponibles
 
 Le module est fourni par [epiviosi-maps](https://github.com/Marmotte-png/epiviosi-maps).
 
+## Sécurité (EPIVÍOSI SECURITY)
+
+Chiffrement de clés USB et de disques (GNOME Disques, LUKS), de fichiers
+(Picocrypt, GnuPG + GPA, age), nettoyage des métadonnées (Metadata Cleaner),
+BleachBit, GtkHash. Le lanceur « EPIVÍOSI SECURITY » ouvre un guide pas à pas,
+et `epiviosi-security-docs` ajoute au wiki ≈ 0,8 Go de documentation
+(Information Security, Cryptography, The OpSec Bible).
+Le module est fourni par [epiviosi-security](https://github.com/Marmotte-png/epiviosi-security).
+
 ## Préparer une clé de 128 Go
 
 ```sh
@@ -108,7 +118,7 @@ sudo dd if=epiviosi-live-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync
 sudo epiviosi-wiki-setup --size 75G    # Wikipédia FR + intros EN (≈ 70 Go)
 sudo epiviosi-maps-setup --size 8G     # cartes de la France (≈ 5 Go)
 sudo epiviosi-persist-setup            # persistance dans l'espace restant (≈ 35 Go)
-epiviosi-wiki-fetch && epiviosi-maps-fetch
+epiviosi-wiki-fetch && epiviosi-maps-fetch && epiviosi-security-docs
 ```
 
 ## Structure
@@ -120,6 +130,7 @@ epiviosi-wiki-fetch && epiviosi-maps-fetch
 | `modules/` | Modules NixOS : identité, langue, bureau, paquets, persistance, durcissement |
 | `epiviosi-wiki` (entrée du flake) | Module EPIVÍOSI WIKI (Kiwix), activé dans `hosts/live-iso.nix` |
 | `epiviosi-maps` (entrée du flake) | Module EPIVÍOSI MAPS (Organic Maps), activé dans `hosts/live-iso.nix` |
+| `epiviosi-security` (entrée du flake) | Module EPIVÍOSI SECURITY, activé dans `hosts/live-iso.nix` |
 | `modules/epiviosi-modules.nix` | Options `epiviosi.{wiki,medic,maps,security}.enable` pour les autres modules |
 | `pkgs/epiviosi-persist/` | Outil `epiviosi-persist-setup` |
 | `assets/` | Logo et fond d'écran |
