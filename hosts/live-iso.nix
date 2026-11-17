@@ -23,6 +23,7 @@
   # Modules de la suite EPIVÍOSI.
   epiviosi.wiki.enable = true;
   epiviosi.maps.enable = true;
+  epiviosi.security.enable = true;
 
   system.stateVersion = "26.05";
 }
