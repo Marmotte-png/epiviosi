@@ -6,18 +6,20 @@
 #   --persist       ajoute un disque .vm/persist.qcow2 (à formater EPIVIOSI-DATA)
 #   --wiki          ajoute un disque exFAT EPIV-WIKI (.vm/wiki.img) contenant
 #                   les .zim du dossier .vm/zim/ (copiés via udisksctl)
+#   --offline       pas de carte réseau (vérifier le fonctionnement hors-ligne)
 #   --headless      pas de fenêtre ; moniteur QEMU sur .vm/monitor.sock
 #   --iso FICHIER   ISO à utiliser (défaut : result/iso/*.iso)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-mode=uefi usb=0 persist=0 wiki=0 headless=0 iso=""
+mode=uefi usb=0 persist=0 wiki=0 offline=0 headless=0 iso=""
 while [ $# -gt 0 ]; do
   case "$1" in
     uefi|bios) mode="$1" ;;
     --usb) usb=1 ;;
     --persist) persist=1 ;;
     --wiki) wiki=1 ;;
+    --offline) offline=1 ;;
     --headless) headless=1 ;;
     --iso) iso="$2"; shift ;;
     *) echo "option inconnue : $1" >&2; exit 1 ;;
@@ -33,8 +35,13 @@ fi
 mkdir -p .vm
 args=(-enable-kvm -cpu host -m 4096 -smp 2
       -vga virtio
-      -nic user,model=virtio-net-pci
       -device qemu-xhci)
+
+if [ "$offline" = 1 ]; then
+  args+=(-nic none)
+else
+  args+=(-nic user,model=virtio-net-pci)
+fi
 
 if [ "$mode" = uefi ]; then
   ovmf_code=/usr/share/OVMF/OVMF_CODE_4M.fd

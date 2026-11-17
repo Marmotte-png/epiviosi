@@ -40,6 +40,7 @@ scripts/run-vm.sh bios              # démarrage BIOS
 scripts/run-vm.sh uefi --usb        # comme une clé USB de 8 Go
 scripts/run-vm.sh uefi --persist    # avec un disque supplémentaire pour la persistance
 scripts/run-vm.sh uefi --wiki       # avec un disque EPIV-WIKI contenant les .zim de .vm/zim/
+scripts/run-vm.sh uefi --offline    # sans réseau, pour vérifier le hors-ligne
 ```
 
 ## Écrire sur une clé USB

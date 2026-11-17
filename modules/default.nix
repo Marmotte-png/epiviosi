@@ -6,6 +6,7 @@
     ./locale.nix
     ./desktop.nix
     ./packages.nix
+    ./firefox.nix
     ./persistence.nix
     ./hardening.nix
   ];
