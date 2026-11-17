@@ -6,8 +6,9 @@
 #   --persist       ajoute un disque .vm/persist.qcow2 (à formater EPIVIOSI-DATA)
 #   --wiki          ajoute un disque exFAT EPIV-WIKI (.vm/wiki.img) contenant
 #                   les .zim du dossier .vm/zim/ (copiés via udisksctl)
-#   --maps          ajoute un disque exFAT EPIV-MAPS (.vm/maps.img) contenant
-#                   le dossier .vm/maps/ (ex. .vm/maps/organicmaps/260527/*.mwm)
+#   --maps          ajoute une persistance EPIVIOSI-DATA déjà remplie
+#                   (.vm/persist-maps.img) avec les cartes de .vm/maps/
+#                   (ex. .vm/maps/260527/*.mwm) dans ~/Persistant/OrganicMaps
 #   --offline       pas de carte réseau (vérifier le fonctionnement hors-ligne)
 #   --headless      pas de fenêtre ; moniteur QEMU sur .vm/monitor.sock et
 #                   QMP sur .vm/qmp.sock (tests automatisés : clavier, souris)
@@ -66,7 +67,7 @@ else
   args+=(-drive "media=cdrom,readonly=on,file=$iso" -boot d)
 fi
 
-if [ "$persist" = 1 ]; then
+if [ "$persist" = 1 ] && [ "$maps" = 0 ]; then
   [ -f .vm/persist.qcow2 ] || qemu-img create -f qcow2 .vm/persist.qcow2 2G >/dev/null
   args+=(-drive "if=virtio,format=qcow2,file=.vm/persist.qcow2")
 fi
@@ -102,7 +103,21 @@ data_disk() {  # ÉTIQUETTE IMAGE DOSSIER_SOURCE
 }
 
 [ "$wiki" = 1 ] && data_disk EPIV-WIKI .vm/wiki.img .vm/zim
-[ "$maps" = 1 ] && data_disk EPIV-MAPS .vm/maps.img .vm/maps
+# Persistance de test avec cartes : ext4 rempli sans droits root (mkfs -d),
+# fichiers appartenant à l'utilisateur courant (uid 1000 = epiviosi).
+if [ "$maps" = 1 ]; then
+  mkdir -p .vm/maps
+  if [ ! -f .vm/persist-maps.img ] || [ -n "$(find .vm/maps -newer .vm/persist-maps.img -print -quit)" ]; then
+    rm -rf .vm/persist-src && mkdir -p .vm/persist-src/epiviosi/OrganicMaps
+    cp -r .vm/maps/. .vm/persist-src/epiviosi/OrganicMaps/
+    chmod 700 .vm/persist-src/epiviosi
+    rm -f .vm/persist-maps.img
+    truncate -s "$(( $(du -sb .vm/persist-src | cut -f1) / 1024 / 1024 / 1024 + 2 ))G" .vm/persist-maps.img
+    mkfs.ext4 -q -L EPIVIOSI-DATA -d .vm/persist-src .vm/persist-maps.img
+    rm -rf .vm/persist-src
+  fi
+  args+=(-drive "if=virtio,format=raw,file=.vm/persist-maps.img")
+fi
 
 if [ "$headless" = 1 ]; then
   args+=(-display none -monitor "unix:.vm/monitor.sock,server,nowait"

@@ -58,6 +58,15 @@
         epiviosi-persist = self.packages.${system}.epiviosi-persist;
         # Évalue la configuration complète (toplevel) sans construire l'ISO.
         toplevel = self.nixosConfigurations.epiviosi-live.config.system.build.toplevel;
+        # Préparation d'une clé : ISO + wiki + persistance (table MBR).
+        cle-usb = import ./tests/cle-usb.nix {
+          inherit pkgs;
+          iso = "${self.packages.${system}.iso}/iso/epiviosi-live-x86_64.iso";
+          tools = [
+            self.packages.${system}.epiviosi-persist
+            epiviosi-wiki.packages.${system}.epiviosi-wiki-setup
+          ];
+        };
       };
     };
 }
