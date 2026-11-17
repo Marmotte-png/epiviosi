@@ -7,6 +7,7 @@
     ./desktop.nix
     ./packages.nix
     ./firefox.nix
+    ./firefox-translations
     ./persistence.nix
     ./hardening.nix
   ];

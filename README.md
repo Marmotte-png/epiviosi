@@ -15,6 +15,8 @@ Système live hors-ligne basé sur NixOS (x86_64), socle de la suite EPIVÍOSI :
 - **EPIVÍOSI WIKI** : Wikipédia et autres archives ZIM hors-ligne (Kiwix), sur une partition `EPIV-WIKI`
 - **EPIVÍOSI MAPS** : cartes OpenStreetMap, recherche et itinéraires hors-ligne (Organic Maps), sur une partition `EPIV-MAPS`
 - **EPIVÍOSI SECURITY** : clés USB et fichiers chiffrés, nettoyage des métadonnées, guide et documentation hors-ligne
+- **EPIVÍOSI MEDIC** : documentation médicale hors-ligne, dossiers médicaux chiffrés avec modèles de fiches
+- **Traduction de pages FR ↔ EN dans Firefox**, entièrement hors-ligne
 - Pare-feu actif, pas de serveur SSH, réglages noyau durcis
 
 ## Prérequis (machine de construction)
@@ -110,15 +112,34 @@ et `epiviosi-security-docs` ajoute au wiki ≈ 0,8 Go de documentation
 (Information Security, Cryptography, The OpSec Bible).
 Le module est fourni par [epiviosi-security](https://github.com/Marmotte-png/epiviosi-security).
 
+## Médecine (EPIVÍOSI MEDIC)
+
+Guide avec les numéros d'urgence, **dossiers médicaux** dans un coffre chiffré
+(`~/Persistant`, phrase de passe) avec des modèles LibreOffice (fiche patient,
+bilan secouriste, suivi de traitement), et `epiviosi-medic-docs` pour ajouter
+au wiki ≈ 4,4 Go de documentation médicale (MDWiki, MedlinePlus, NHS…).
+Le module est fourni par [epiviosi-medic](https://github.com/Marmotte-png/epiviosi-medic).
+
+## Traduction hors-ligne (Firefox)
+
+Firefox propose de traduire les pages anglaises en français (et inversement)
+sans connexion : les modèles FR ↔ EN (≈ 50 Mo) sont inclus dans l'ISO et servis
+en local (`modules/firefox-translations/`). Une traduction automatique peut
+contenir des erreurs, notamment pour un contenu médical : l'original reste à
+un clic. Pour mettre à jour `records.json` (nouvelle version majeure des
+modèles exigée par Firefox) : récupérer les enregistrements `translations-models-v2`
+(paires en/fr, fr/en) et `translations-wasm-v2` (bergamot-translator) sur
+`https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/…/records`.
+
 ## Préparer une clé de 128 Go
 
 ```sh
 sudo dd if=epiviosi-live-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync   # ≈ 3 Go
 # puis, après avoir démarré sur la clé, avec une connexion :
-sudo epiviosi-wiki-setup --size 75G    # Wikipédia FR + intros EN (≈ 70 Go)
+sudo epiviosi-wiki-setup --size 80G    # Wikipédia FR + intros EN + docs sécurité et médecine (≈ 75 Go)
 sudo epiviosi-maps-setup --size 8G     # cartes de la France (≈ 5 Go)
-sudo epiviosi-persist-setup            # persistance dans l'espace restant (≈ 35 Go)
-epiviosi-wiki-fetch && epiviosi-maps-fetch && epiviosi-security-docs
+sudo epiviosi-persist-setup            # persistance dans l'espace restant (≈ 30 Go)
+epiviosi-wiki-fetch && epiviosi-maps-fetch && epiviosi-security-docs && epiviosi-medic-docs
 ```
 
 ## Structure
@@ -131,6 +152,8 @@ epiviosi-wiki-fetch && epiviosi-maps-fetch && epiviosi-security-docs
 | `epiviosi-wiki` (entrée du flake) | Module EPIVÍOSI WIKI (Kiwix), activé dans `hosts/live-iso.nix` |
 | `epiviosi-maps` (entrée du flake) | Module EPIVÍOSI MAPS (Organic Maps), activé dans `hosts/live-iso.nix` |
 | `epiviosi-security` (entrée du flake) | Module EPIVÍOSI SECURITY, activé dans `hosts/live-iso.nix` |
+| `epiviosi-medic` (entrée du flake) | Module EPIVÍOSI MEDIC, activé dans `hosts/live-iso.nix` |
+| `modules/firefox-translations/` | Traduction FR ↔ EN hors-ligne dans Firefox |
 | `modules/epiviosi-modules.nix` | Options `epiviosi.{wiki,medic,maps,security}.enable` pour les autres modules |
 | `pkgs/epiviosi-persist/` | Outil `epiviosi-persist-setup` |
 | `assets/` | Logo et fond d'écran |

@@ -1,0 +1,157 @@
+{
+ "_comment": "Enregistrements Remote Settings figés (Firefox Translations FR<->EN), récupérés le 2026-11-17 depuis firefox.settings.services.mozilla.com. Voir modules/firefox-translations/default.nix.",
+ "timestamp": 1760455775494,
+ "collections": {
+  "translations-models-v2": [
+   {
+    "name": "model.enfr.intgemm.alphas.bin",
+    "schema": 1759521553853,
+    "version": "3.0",
+    "fileType": "model",
+    "attachment": {
+     "hash": "98c229b4f356565fec4cd9ba9374b1fa0216965addeef7ca250d4a3ed4a396eb",
+     "size": 22542574,
+     "filename": "model.enfr.intgemm.alphas.bin.zst",
+     "location": "main-workspace/translations-models-v2/570d07a3-d360-430f-bbb4-37d89715bcfb.zst",
+     "mimetype": "application/zstd"
+    },
+    "architecture": "base-memory",
+    "sourceLanguage": "en",
+    "targetLanguage": "fr",
+    "decompressedHash": "6322e296d4fecfe395a8d5723da4ec37ecbe6d7613bb1dfcf4b28e2a47498b68",
+    "decompressedSize": 31561787,
+    "filter_expression": "",
+    "id": "72097f14-48e2-4031-b5a9-a2b7e325ff98",
+    "last_modified": 1759522640378
+   },
+   {
+    "name": "lex.50.50.enfr.s2t.bin",
+    "schema": 1759521550536,
+    "version": "3.0",
+    "fileType": "lex",
+    "attachment": {
+     "hash": "371c84ca05d528013638c4c19c24fb12a15cbe9208239e599498539467a0436e",
+     "size": 1703263,
+     "filename": "lex.50.50.enfr.s2t.bin.zst",
+     "location": "main-workspace/translations-models-v2/bff0d10a-d07a-4873-a5a7-a6b7af42bf86.zst",
+     "mimetype": "application/zstd"
+    },
+    "architecture": "base-memory",
+    "sourceLanguage": "en",
+    "targetLanguage": "fr",
+    "decompressedHash": "2585ed98d3af0bc949865aedeb390493d591f56870814376e73e4144c41ed059",
+    "decompressedSize": 4372936,
+    "filter_expression": "",
+    "id": "fbff4a38-2eb5-4c72-a422-a53bb82a4ab8",
+    "last_modified": 1759522640369
+   },
+   {
+    "name": "vocab.enfr.spm",
+    "schema": 1759521552408,
+    "version": "3.0",
+    "fileType": "vocab",
+    "attachment": {
+     "hash": "61c982758a3e7dc880a8dbc11aaf0fb04a1e4f5d2d7a36ee11bc419323f2ca80",
+     "size": 348946,
+     "filename": "vocab.enfr.spm.zst",
+     "location": "main-workspace/translations-models-v2/faa168f7-1b8d-4d29-9267-cc5e1bac3c73.zst",
+     "mimetype": "application/zstd"
+    },
+    "architecture": "base-memory",
+    "sourceLanguage": "en",
+    "targetLanguage": "fr",
+    "decompressedHash": "783abf3abe075afdf8d85d233994bef2c3a064e935ab1bed946820aff6ac002a",
+    "decompressedSize": 814404,
+    "filter_expression": "",
+    "id": "a7aea13d-32ac-4f27-96b9-7c101f4eb302",
+    "last_modified": 1759522640342
+   },
+   {
+    "name": "lex.50.50.fren.s2t.bin",
+    "schema": 1758909803409,
+    "version": "3.0",
+    "fileType": "lex",
+    "attachment": {
+     "hash": "97d54df5179b2c7909eb075367765829f6a17ac2304ba3dba28accff09fe26e2",
+     "size": 1959170,
+     "filename": "lex.50.50.fren.s2t.bin.zst",
+     "location": "main-workspace/translations-models-v2/7238348a-b118-40f8-9e17-327fb54b2dc8.zst",
+     "mimetype": "application/zstd"
+    },
+    "architecture": "base-memory",
+    "sourceLanguage": "fr",
+    "targetLanguage": "en",
+    "decompressedHash": "87c6752ea908f5f0347c10ac0cf7d80d9c2f4f20c81c90168f3e8230b56d4440",
+    "decompressedSize": 4824120,
+    "filter_expression": "",
+    "id": "c6522411-8269-4a81-8a04-05fccdfa1da3",
+    "last_modified": 1758912286088
+   },
+   {
+    "name": "model.fren.intgemm.alphas.bin",
+    "schema": 1758909794388,
+    "version": "3.0",
+    "fileType": "model",
+    "attachment": {
+     "hash": "aba908645fa802706cf9ab0bcbf95a6b1ff1281e65402c9225893c923bd73f9a",
+     "size": 22712124,
+     "filename": "model.fren.intgemm.alphas.bin.zst",
+     "location": "main-workspace/translations-models-v2/3a84a714-bfc7-4e52-81a1-b08d5d9421d2.zst",
+     "mimetype": "application/zstd"
+    },
+    "architecture": "base-memory",
+    "sourceLanguage": "fr",
+    "targetLanguage": "en",
+    "decompressedHash": "15f997bc0d13808b0b0fbd0786e684a3c8a52adcd8071844b76123fdacbf2b90",
+    "decompressedSize": 31561787,
+    "filter_expression": "",
+    "id": "1497f513-2b73-4c61-b38f-0e452d4a2a56",
+    "last_modified": 1758912286085
+   },
+   {
+    "name": "vocab.fren.spm",
+    "schema": 1758909792946,
+    "version": "3.0",
+    "fileType": "vocab",
+    "attachment": {
+     "hash": "61c982758a3e7dc880a8dbc11aaf0fb04a1e4f5d2d7a36ee11bc419323f2ca80",
+     "size": 348946,
+     "filename": "vocab.fren.spm.zst",
+     "location": "main-workspace/translations-models-v2/671f09a0-12a2-436e-94d8-2575a4594c2a.zst",
+     "mimetype": "application/zstd"
+    },
+    "architecture": "base-memory",
+    "sourceLanguage": "fr",
+    "targetLanguage": "en",
+    "decompressedHash": "783abf3abe075afdf8d85d233994bef2c3a064e935ab1bed946820aff6ac002a",
+    "decompressedSize": 814404,
+    "filter_expression": "",
+    "id": "604f287f-cdd7-4160-b18a-0d1c290dddca",
+    "last_modified": 1758912286076
+   }
+  ],
+  "translations-wasm-v2": [
+   {
+    "name": "bergamot-translator",
+    "schema": 1760449158298,
+    "license": "MPL-2.0",
+    "release": "v0.6.0",
+    "version": "4.0",
+    "revision": "1de4a085d3a7afb625c51a60aabb5ad298e4059f",
+    "attachment": {
+     "hash": "327fcfc7b7e9d95f6fa0844ebf899cfc05469872ef02d3aef5783182839a6255",
+     "size": 1211955,
+     "filename": "bergamot-translator.wasm.zst",
+     "location": "main-workspace/translations-wasm-v2/a76f9efe-b185-4a7f-9c3b-5f5d216d12e6.zst",
+     "mimetype": "application/zstd"
+    },
+    "fx_release": "144.0a1",
+    "decompressedHash": "f38ef807636a7c994afedaab7ff8ffe0d590d21897f05139f747b80fd7bbe926",
+    "decompressedSize": 4960506,
+    "filter_expression": "",
+    "id": "ce71828c-5e7a-4024-8f18-03064bf0b9f0",
+    "last_modified": 1760455775494
+   }
+  ]
+ }
+}
