@@ -8,6 +8,27 @@
       "fr"
       "en-US"
     ];
+    # Session live hors-ligne : pas d'onglets de bienvenue, de note de
+    # confidentialité ni de télémétrie à chaque démarrage.
+    policies = {
+      DisableTelemetry = true;
+      DisableFirefoxStudies = true;
+      DontCheckDefaultBrowser = true;
+      OverrideFirstRunPage = "";
+      OverridePostUpdatePage = "";
+      UserMessaging = {
+        SkipOnboarding = true;
+        ExtensionRecommendations = false;
+        FeatureRecommendations = false;
+        MoreFromMozilla = false;
+        Locked = true;
+      };
+    };
+    preferences = {
+      # Onglet « Privacy Notice » / « Note sur la confidentialité ».
+      "datareporting.policy.dataSubmissionPolicyBypassNotification" = true;
+      "datareporting.policy.firstRunURL" = "";
+    };
   };
 
   programs.nm-applet.enable = true;

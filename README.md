@@ -66,7 +66,7 @@ Seul le contenu de `~/Persistant` est conservé.
 
 ## Wiki hors-ligne (EPIVÍOSI WIKI)
 
-Les archives ZIM (Wikipédia FR complète ≈ 35 Go, EN ≈ 110 Go) ne tiennent pas
+Les archives ZIM (Wikipédia FR complète ≈ 56 Go avec images, ≈ 13 Go sans ; EN ≈ 128 Go) ne tiennent pas
 dans l'ISO : elles vont sur une partition **exFAT** étiquetée `EPIV-WIKI`
 (11 caractères au plus en exFAT). Elle est montée sur `/wiki`, et tous ses
 `.zim` sont servis par Kiwix sur <http://127.0.0.1:8080> (lanceur
