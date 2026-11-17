@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794914592,
-        "narHash": "sha256-raCfNpEVN+mgdn0dsWxNZY5+zxuWIGKaQ8SSnar2x/U=",
+        "lastModified": 1794920858,
+        "narHash": "sha256-l4+XdxctGE8Dx7QA4GE9Rp+ZsCG+Y/L4ZUwadJrN1IM=",
         "owner": "Marmotte-png",
         "repo": "epiviosi-wiki",
-        "rev": "f79f7161290b40f6e332558759bb4f28ecd73d98",
+        "rev": "9340ed7383fa61154c9f88357eacffb65bd64719",
         "type": "github"
       },
       "original": {
