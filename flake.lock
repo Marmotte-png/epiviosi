@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "epiviosi-medic": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794935689,
+        "narHash": "sha256-1hYqQB6fCAx2rfn2KNVxm9RM1goD7RzuYBnqXHegMZc=",
+        "owner": "Marmotte-png",
+        "repo": "epiviosi-medic",
+        "rev": "d25cf6a6f68a9f13772dde39c8d72624e965af10",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Marmotte-png",
+        "repo": "epiviosi-medic",
+        "type": "github"
+      }
+    },
     "epiviosi-security": {
       "inputs": {
         "nixpkgs": [
@@ -47,11 +67,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794931109,
-        "narHash": "sha256-Gn9C+yfXa7vmi9bkUrkzjFZnbBTwhdFi6qR29V2dXiM=",
+        "lastModified": 1794935715,
+        "narHash": "sha256-DnaPmcrF0uxKf69jXLfvmTDl3QTeS8i7Tm5YGr/Of8k=",
         "owner": "Marmotte-png",
         "repo": "epiviosi-wiki",
-        "rev": "e80501da818e3b79bb8d680a4335b1e48a025d01",
+        "rev": "6f42877f460b2c81ca16e6b7026d4dbaa04001d0",
         "type": "github"
       },
       "original": {
@@ -79,6 +99,7 @@
     "root": {
       "inputs": {
         "epiviosi-maps": "epiviosi-maps",
+        "epiviosi-medic": "epiviosi-medic",
         "epiviosi-security": "epiviosi-security",
         "epiviosi-wiki": "epiviosi-wiki",
         "nixpkgs": "nixpkgs"
