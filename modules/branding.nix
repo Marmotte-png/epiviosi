@@ -47,6 +47,7 @@ in
     Bienvenue dans EPIVÍOSI OS / Welcome to EPIVÍOSI OS.
     Session live : l'utilisateur « ${user} » n'a pas de mot de passe.
     Persistance : lancez « sudo epiviosi-persist-setup » pour créer la partition EPIVIOSI-DATA.
+    Wiki hors-ligne : « sudo epiviosi-wiki-setup --size 60G » crée la partition EPIV-WIKI (fichiers .zim).
   '';
 
   users.users.${user} = {
