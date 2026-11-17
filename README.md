@@ -13,7 +13,7 @@ Système live hors-ligne basé sur NixOS (x86_64), socle de la suite EPIVÍOSI :
 - Choix de la langue au démarrage : **Français (AZERTY)** par défaut, ou **English (QWERTY)**
 - Amnésique par défaut ; persistance optionnelle via une partition `EPIVIOSI-DATA`
 - **EPIVÍOSI WIKI** : Wikipédia et autres archives ZIM hors-ligne (Kiwix), sur une partition `EPIV-WIKI`
-- **EPIVÍOSI MAPS** : cartes OpenStreetMap, recherche et itinéraires hors-ligne (Organic Maps), sur une partition `EPIV-MAPS`
+- **EPIVÍOSI MAPS** : cartes OpenStreetMap, recherche et itinéraires hors-ligne (Organic Maps), dans la persistance
 - **EPIVÍOSI SECURITY** : clés USB et fichiers chiffrés, nettoyage des métadonnées, guide et documentation hors-ligne
 - **EPIVÍOSI MEDIC** : documentation médicale hors-ligne, dossiers médicaux chiffrés avec modèles de fiches
 - **Traduction de pages FR ↔ EN dans Firefox**, entièrement hors-ligne
@@ -44,7 +44,7 @@ scripts/run-vm.sh bios              # démarrage BIOS
 scripts/run-vm.sh uefi --usb        # comme une clé USB de 8 Go
 scripts/run-vm.sh uefi --persist    # avec un disque supplémentaire pour la persistance
 scripts/run-vm.sh uefi --wiki       # avec un disque EPIV-WIKI contenant les .zim de .vm/zim/
-scripts/run-vm.sh uefi --maps       # avec un disque EPIV-MAPS contenant .vm/maps/
+scripts/run-vm.sh uefi --maps       # avec une persistance contenant les cartes de .vm/maps/
 scripts/run-vm.sh uefi --offline    # sans réseau, pour vérifier le hors-ligne
 ```
 
@@ -90,14 +90,12 @@ Le module est fourni par [epiviosi-wiki](https://github.com/Marmotte-png/epivios
 
 ## Cartes hors-ligne (EPIVÍOSI MAPS)
 
-Les cartes Organic Maps (France ≈ 4,9 Go, outre-mer compris) vont sur une
-partition **exFAT** étiquetée `EPIV-MAPS`, montée sur `/maps`. Le lanceur
-« EPIVÍOSI MAPS » y redirige les données d'Organic Maps : cartes, favoris et
-traces restent sur la clé.
+Les cartes Organic Maps (France ≈ 4,9 Go, outre-mer compris) vont dans la
+persistance, `~/Persistant/OrganicMaps`. Le lanceur « EPIVÍOSI MAPS » y
+redirige les données d'Organic Maps : cartes, favoris et traces sont conservés.
 
 ```sh
-sudo epiviosi-maps-setup --size 8G     # partition EPIV-MAPS
-epiviosi-maps-fetch                    # cartes de la France (connexion requise)
+epiviosi-maps-fetch                    # cartes de la France (persistance et connexion requises)
 epiviosi-maps-fetch --list             # autres pays disponibles
 ```
 
@@ -133,14 +131,28 @@ modèles exigée par Firefox) : récupérer les enregistrements `translations-mo
 
 ## Préparer une clé de 128 Go
 
+Sur la clé, l'ISO utilise une table **MBR** : 4 partitions au plus, dont 2
+prises par le système et la partition EFI. Il en reste donc deux :
+
+| Partition | Contenu | Système de fichiers | Taille |
+| --- | --- | --- | --- |
+| 1 | Système EPIVÍOSI (ISO) | ISO 9660 | ≈ 3,3 Go |
+| 2 | EFI (démarrage UEFI) | FAT | 3 Mo |
+| 3 | `EPIV-WIKI` : Wikipédia, docs sécurité et médecine | exFAT | 80 Go |
+| 4 | `EPIVIOSI-DATA` : persistance (`~/Persistant`, cartes, dossiers médicaux) | ext4 | le reste, ≈ 37 Go |
+
 ```sh
-sudo dd if=epiviosi-live-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync   # ≈ 3 Go
-# puis, après avoir démarré sur la clé, avec une connexion :
-sudo epiviosi-wiki-setup --size 80G    # Wikipédia FR + intros EN + docs sécurité et médecine (≈ 75 Go)
-sudo epiviosi-maps-setup --size 8G     # cartes de la France (≈ 5 Go)
-sudo epiviosi-persist-setup            # persistance dans l'espace restant (≈ 30 Go)
-epiviosi-wiki-fetch && epiviosi-maps-fetch && epiviosi-security-docs && epiviosi-medic-docs
+sudo dd if=epiviosi-live-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync
+# puis, après avoir démarré sur la clé :
+sudo epiviosi-wiki-setup --size 80G    # d'abord le wiki (taille fixe)
+sudo epiviosi-persist-setup            # puis la persistance sur tout le reste
+# redémarrer (la persistance est montée au démarrage), puis avec une connexion :
+epiviosi-wiki-fetch && epiviosi-security-docs && epiviosi-medic-docs && epiviosi-maps-fetch
 ```
+
+L'ordre compte : la persistance prend tout l'espace restant, le wiki doit donc
+être créé avant. Les outils vérifient que les partitions de démarrage restent
+intactes, et refusent proprement s'il n'y a plus de place.
 
 ## Structure
 

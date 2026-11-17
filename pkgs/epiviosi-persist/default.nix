@@ -5,6 +5,7 @@
   e2fsprogs,
   gawk,
   gnugrep,
+  gnused,
   coreutils,
   systemd,
 }:
@@ -16,6 +17,7 @@ writeShellApplication {
     e2fsprogs
     gawk
     gnugrep
+    gnused
     coreutils
     systemd
   ];

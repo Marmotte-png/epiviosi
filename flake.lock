@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794931101,
-        "narHash": "sha256-8a9BBbM4CY6aWc5/fbN4NYfze5Rx+LJD3rp6C9624GA=",
+        "lastModified": 1794948049,
+        "narHash": "sha256-WN9LstsmTddXpThCFa9ZLQJE7noShNmBR781ePM2gRE=",
         "owner": "Marmotte-png",
         "repo": "epiviosi-maps",
-        "rev": "b0108c1a01d0fa21367fbc32dbbfb0e7978e1931",
+        "rev": "f10eb2251661a98b80d5bddbfef0d5dfe9e4ba2e",
         "type": "github"
       },
       "original": {
@@ -67,11 +67,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794935715,
-        "narHash": "sha256-DnaPmcrF0uxKf69jXLfvmTDl3QTeS8i7Tm5YGr/Of8k=",
+        "lastModified": 1794948032,
+        "narHash": "sha256-5TB2y7St1uJxxmfCOEnxRGOJTR5rI0HUBfFRVfuZ99w=",
         "owner": "Marmotte-png",
         "repo": "epiviosi-wiki",
-        "rev": "6f42877f460b2c81ca16e6b7026d4dbaa04001d0",
+        "rev": "8e82b6b11002084b4b60f43425dc6d89b351162c",
         "type": "github"
       },
       "original": {
