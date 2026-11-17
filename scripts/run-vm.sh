@@ -4,17 +4,20 @@
 # Usage : scripts/run-vm.sh [uefi|bios] [options]
 #   --usb           démarre l'ISO comme une clé USB de 8 Go (copie dans .vm/usb.img)
 #   --persist       ajoute un disque .vm/persist.qcow2 (à formater EPIVIOSI-DATA)
+#   --wiki          ajoute un disque exFAT EPIV-WIKI (.vm/wiki.img) contenant
+#                   les .zim du dossier .vm/zim/ (copiés via udisksctl)
 #   --headless      pas de fenêtre ; moniteur QEMU sur .vm/monitor.sock
 #   --iso FICHIER   ISO à utiliser (défaut : result/iso/*.iso)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-mode=uefi usb=0 persist=0 headless=0 iso=""
+mode=uefi usb=0 persist=0 wiki=0 headless=0 iso=""
 while [ $# -gt 0 ]; do
   case "$1" in
     uefi|bios) mode="$1" ;;
     --usb) usb=1 ;;
     --persist) persist=1 ;;
+    --wiki) wiki=1 ;;
     --headless) headless=1 ;;
     --iso) iso="$2"; shift ;;
     *) echo "option inconnue : $1" >&2; exit 1 ;;
@@ -55,6 +58,38 @@ fi
 if [ "$persist" = 1 ]; then
   [ -f .vm/persist.qcow2 ] || qemu-img create -f qcow2 .vm/persist.qcow2 2G >/dev/null
   args+=(-drive "if=virtio,format=qcow2,file=.vm/persist.qcow2")
+fi
+
+# Disque wiki : un système de fichiers exFAT sur tout le disque, reconstruit
+# quand le contenu de .vm/zim/ change. La copie passe par udisksctl (montage
+# en loop sans sudo).
+make_wiki_img() {
+  local zims=(.vm/zim/*.zim) size dev mp
+  local bytes=0 f
+  for f in "${zims[@]}"; do bytes=$((bytes + $(stat -c %s "$f"))); done
+  size=$(( (bytes / 1024 / 1024 / 1024) + 2 ))G
+  rm -f .vm/wiki.img
+  truncate -s "$size" .vm/wiki.img
+  mkfs.exfat -L EPIV-WIKI .vm/wiki.img >/dev/null
+  [ ${#zims[@]} -gt 0 ] || return 0
+  dev="$(udisksctl loop-setup --no-user-interaction -f .vm/wiki.img | grep -o '/dev/loop[0-9]*')"
+  sleep 1
+  mp="$(findmnt -no TARGET "$dev" || true)"
+  [ -n "$mp" ] || { udisksctl mount --no-user-interaction -b "$dev" >/dev/null; mp="$(findmnt -no TARGET "$dev")"; }
+  echo "Copie de ${#zims[@]} ZIM dans .vm/wiki.img…"
+  cp "${zims[@]}" "$mp/"
+  udisksctl unmount --no-user-interaction -b "$dev" >/dev/null
+  udisksctl loop-delete --no-user-interaction -b "$dev" >/dev/null
+}
+
+if [ "$wiki" = 1 ]; then
+  shopt -s nullglob
+  mkdir -p .vm/zim
+  if [ ! -f .vm/wiki.img ] || [ -n "$(find .vm/zim -newer .vm/wiki.img -print -quit)" ]; then
+    make_wiki_img
+  fi
+  shopt -u nullglob
+  args+=(-drive "if=virtio,format=raw,file=.vm/wiki.img")
 fi
 
 if [ "$headless" = 1 ]; then

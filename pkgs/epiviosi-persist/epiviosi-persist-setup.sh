@@ -1,13 +1,33 @@
 # epiviosi-persist-setup — crée la partition de persistance EPIVIOSI-DATA.
 #
-# Usage : sudo epiviosi-persist-setup [DISQUE]
-#   DISQUE : disque entier (ex. /dev/sdb). Par défaut, la clé USB qui a
-#            démarré EPIVÍOSI. La partition est ajoutée dans l'espace libre
-#            restant ; les partitions existantes ne sont pas modifiées.
+# Usage : sudo epiviosi-persist-setup [--size TAILLE] [DISQUE]
+#   --size TAILLE : taille de la partition (ex. 8G). Par défaut, tout
+#                   l'espace libre.
+#   DISQUE        : disque entier (ex. /dev/sdb). Par défaut, la clé USB qui a
+#                   démarré EPIVÍOSI. La partition est ajoutée dans l'espace
+#                   libre restant ; les partitions existantes ne sont pas
+#                   modifiées.
 
 LABEL="EPIVIOSI-DATA"
 
 die() { echo "Erreur : $*" >&2; exit 1; }
+usage() { echo "Usage : sudo epiviosi-persist-setup [--size TAILLE] [DISQUE]   (ex. --size 8G /dev/sdb)"; }
+
+size="" disk=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --size) [ $# -ge 2 ] || die "--size attend une taille (ex. 8G)."; size="$2"; shift ;;
+    --size=*) size="${1#--size=}" ;;
+    -h|--help) usage; exit 0 ;;
+    -*) die "option inconnue : $1" ;;
+    *) disk="$1" ;;
+  esac
+  shift
+done
+
+if [ -n "$size" ]; then
+  [[ "$size" =~ ^[0-9]+[KMGT]$ ]] || die "taille invalide : $size (ex. 500M, 8G, 1T)."
+fi
 
 [ "$(id -u)" -eq 0 ] || die "lancez cette commande avec sudo."
 
@@ -16,7 +36,6 @@ if [ -e "/dev/disk/by-label/$LABEL" ]; then
   exit 0
 fi
 
-disk="${1:-}"
 if [ -z "$disk" ]; then
   src="$(findmnt -no SOURCE /iso 2>/dev/null || true)"
   [ -n "$src" ] || die "impossible de trouver le support de démarrage ; indiquez le disque (ex. /dev/sdb)."
@@ -36,7 +55,8 @@ pttype="$(blkid -p -o value -s PTTYPE "$disk" 2>/dev/null || true)"
 echo "Disque cible : $disk ($pttype)"
 lsblk -o NAME,SIZE,TYPE,FSTYPE,LABEL,MOUNTPOINTS "$disk"
 echo
-echo "Une partition ext4 « $LABEL » va être créée dans l'espace libre de ce disque."
+what="tout l'espace libre"; [ -n "$size" ] && what="$size"
+echo "Une partition ext4 « $LABEL » ($what) va être créée dans l'espace libre de ce disque."
 printf "Tapez OUI pour continuer : "
 read -r answer
 [ "$answer" = "OUI" ] || [ "$answer" = "YES" ] || die "annulé."
@@ -48,10 +68,11 @@ case "$pttype" in
     # Image hybride : l'en-tête GPT de secours est à la fin de l'image et non
     # à la fin du disque. On le déplace pour libérer l'espace restant.
     sgdisk -e "$disk" >/dev/null
-    sgdisk -n "0:0:0" -t "0:8300" -c "0:$LABEL" "$disk" >/dev/null || die "création de la partition impossible (espace libre insuffisant ?)."
+    end="0"; [ -n "$size" ] && end="+$size"
+    sgdisk -n "0:0:$end" -t "0:8300" -c "0:$LABEL" "$disk" >/dev/null || die "création de la partition impossible (espace libre insuffisant ?)."
     ;;
   dos)
-    echo ',,83' | sfdisk --append --no-reread --wipe never "$disk" >/dev/null || die "création de la partition impossible (espace libre insuffisant ?)."
+    echo ",$size,83" | sfdisk --append --no-reread --wipe never "$disk" >/dev/null || die "création de la partition impossible (espace libre insuffisant ?)."
     ;;
   *)
     die "type de table de partitions non pris en charge : $pttype"

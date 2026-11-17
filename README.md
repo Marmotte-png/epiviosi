@@ -12,6 +12,7 @@ Système live hors-ligne basé sur NixOS (x86_64), socle de la suite EPIVÍOSI :
 - Bureau XFCE, connexion automatique (utilisateur `epiviosi`, sans mot de passe)
 - Choix de la langue au démarrage : **Français (AZERTY)** par défaut, ou **English (QWERTY)**
 - Amnésique par défaut ; persistance optionnelle via une partition `EPIVIOSI-DATA`
+- **EPIVÍOSI WIKI** : Wikipédia et autres archives ZIM hors-ligne (Kiwix), sur une partition `EPIV-WIKI`
 - Pare-feu actif, pas de serveur SSH, réglages noyau durcis
 
 ## Prérequis (machine de construction)
@@ -38,6 +39,7 @@ scripts/run-vm.sh uefi              # démarrage UEFI depuis le CD
 scripts/run-vm.sh bios              # démarrage BIOS
 scripts/run-vm.sh uefi --usb        # comme une clé USB de 8 Go
 scripts/run-vm.sh uefi --persist    # avec un disque supplémentaire pour la persistance
+scripts/run-vm.sh uefi --wiki       # avec un disque EPIV-WIKI contenant les .zim de .vm/zim/
 ```
 
 ## Écrire sur une clé USB
@@ -55,11 +57,30 @@ Le système est entièrement amnésique, sauf si une partition ext4 étiquetée
 `~/Persistant` y mène. Pour la créer dans l'espace libre de la clé de démarrage :
 
 ```sh
-sudo epiviosi-persist-setup            # clé USB de démarrage
+sudo epiviosi-persist-setup            # clé USB de démarrage, tout l'espace libre
+sudo epiviosi-persist-setup --size 8G  # ou une taille fixe
 sudo epiviosi-persist-setup /dev/sdY   # ou un autre disque
 ```
 
 Seul le contenu de `~/Persistant` est conservé.
+
+## Wiki hors-ligne (EPIVÍOSI WIKI)
+
+Les archives ZIM (Wikipédia FR complète ≈ 35 Go, EN ≈ 110 Go) ne tiennent pas
+dans l'ISO : elles vont sur une partition **exFAT** étiquetée `EPIV-WIKI`
+(11 caractères au plus en exFAT). Elle est montée sur `/wiki`, et tous ses
+`.zim` sont servis par Kiwix sur <http://127.0.0.1:8080> (lanceur
+« EPIVÍOSI WIKI » dans le menu).
+
+```sh
+sudo epiviosi-wiki-setup --size 60G    # sur la clé de démarrage
+sudo epiviosi-persist-setup            # puis la persistance dans l'espace restant
+```
+
+On peut aussi formater la partition depuis Windows, macOS ou Linux (exFAT,
+nom `EPIV-WIKI`) et y copier des fichiers téléchargés sur
+[download.kiwix.org](https://download.kiwix.org/zim/wikipedia/).
+Le module est fourni par [epiviosi-wiki](https://github.com/Marmotte-png/epiviosi-wiki).
 
 ## Structure
 
@@ -68,6 +89,7 @@ Seul le contenu de `~/Persistant` est conservé.
 | `flake.nix` | Entrée du projet (nixpkgs `nixos-26.05`) |
 | `hosts/live-iso.nix` | Paramètres de l'image ISO |
 | `modules/` | Modules NixOS : identité, langue, bureau, paquets, persistance, durcissement |
+| `epiviosi-wiki` (entrée du flake) | Module EPIVÍOSI WIKI (Kiwix), activé dans `hosts/live-iso.nix` |
 | `modules/epiviosi-modules.nix` | Options `epiviosi.{wiki,medic,maps,security}.enable` pour les autres modules |
 | `pkgs/epiviosi-persist/` | Outil `epiviosi-persist-setup` |
 | `assets/` | Logo et fond d'écran |

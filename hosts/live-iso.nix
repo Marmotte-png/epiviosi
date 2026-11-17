@@ -20,5 +20,8 @@
   # ZFS n'est pas utile ici : on le retire (ISO plus légère, pas d'avertissement).
   boot.supportedFilesystems.zfs = lib.mkForce false;
 
+  # Modules de la suite EPIVÍOSI.
+  epiviosi.wiki.enable = true;
+
   system.stateVersion = "26.05";
 }

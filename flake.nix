@@ -3,10 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    epiviosi-wiki = {
+      url = "github:Marmotte-png/epiviosi-wiki";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs, ... }:
+    { self, nixpkgs, epiviosi-wiki, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -18,6 +22,7 @@
       nixosConfigurations.epiviosi-live = nixpkgs.lib.nixosSystem {
         modules = [
           ./hosts/live-iso.nix
+          epiviosi-wiki.nixosModules.default
           { nixpkgs.overlays = [ self.overlays.default ]; }
         ];
       };
