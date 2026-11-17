@@ -13,6 +13,7 @@ Système live hors-ligne basé sur NixOS (x86_64), socle de la suite EPIVÍOSI :
 - Choix de la langue au démarrage : **Français (AZERTY)** par défaut, ou **English (QWERTY)**
 - Amnésique par défaut ; persistance optionnelle via une partition `EPIVIOSI-DATA`
 - **EPIVÍOSI WIKI** : Wikipédia et autres archives ZIM hors-ligne (Kiwix), sur une partition `EPIV-WIKI`
+- **EPIVÍOSI MAPS** : cartes OpenStreetMap, recherche et itinéraires hors-ligne (Organic Maps), sur une partition `EPIV-MAPS`
 - Pare-feu actif, pas de serveur SSH, réglages noyau durcis
 
 ## Prérequis (machine de construction)
@@ -40,6 +41,7 @@ scripts/run-vm.sh bios              # démarrage BIOS
 scripts/run-vm.sh uefi --usb        # comme une clé USB de 8 Go
 scripts/run-vm.sh uefi --persist    # avec un disque supplémentaire pour la persistance
 scripts/run-vm.sh uefi --wiki       # avec un disque EPIV-WIKI contenant les .zim de .vm/zim/
+scripts/run-vm.sh uefi --maps       # avec un disque EPIV-MAPS contenant .vm/maps/
 scripts/run-vm.sh uefi --offline    # sans réseau, pour vérifier le hors-ligne
 ```
 
@@ -83,6 +85,32 @@ nom `EPIV-WIKI`) et y copier des fichiers téléchargés sur
 [download.kiwix.org](https://download.kiwix.org/zim/wikipedia/).
 Le module est fourni par [epiviosi-wiki](https://github.com/Marmotte-png/epiviosi-wiki).
 
+## Cartes hors-ligne (EPIVÍOSI MAPS)
+
+Les cartes Organic Maps (France ≈ 4,9 Go, outre-mer compris) vont sur une
+partition **exFAT** étiquetée `EPIV-MAPS`, montée sur `/maps`. Le lanceur
+« EPIVÍOSI MAPS » y redirige les données d'Organic Maps : cartes, favoris et
+traces restent sur la clé.
+
+```sh
+sudo epiviosi-maps-setup --size 8G     # partition EPIV-MAPS
+epiviosi-maps-fetch                    # cartes de la France (connexion requise)
+epiviosi-maps-fetch --list             # autres pays disponibles
+```
+
+Le module est fourni par [epiviosi-maps](https://github.com/Marmotte-png/epiviosi-maps).
+
+## Préparer une clé de 128 Go
+
+```sh
+sudo dd if=epiviosi-live-x86_64.iso of=/dev/sdX bs=4M status=progress conv=fsync   # ≈ 3 Go
+# puis, après avoir démarré sur la clé, avec une connexion :
+sudo epiviosi-wiki-setup --size 75G    # Wikipédia FR + intros EN (≈ 70 Go)
+sudo epiviosi-maps-setup --size 8G     # cartes de la France (≈ 5 Go)
+sudo epiviosi-persist-setup            # persistance dans l'espace restant (≈ 35 Go)
+epiviosi-wiki-fetch && epiviosi-maps-fetch
+```
+
 ## Structure
 
 | Chemin | Rôle |
@@ -91,6 +119,7 @@ Le module est fourni par [epiviosi-wiki](https://github.com/Marmotte-png/epivios
 | `hosts/live-iso.nix` | Paramètres de l'image ISO |
 | `modules/` | Modules NixOS : identité, langue, bureau, paquets, persistance, durcissement |
 | `epiviosi-wiki` (entrée du flake) | Module EPIVÍOSI WIKI (Kiwix), activé dans `hosts/live-iso.nix` |
+| `epiviosi-maps` (entrée du flake) | Module EPIVÍOSI MAPS (Organic Maps), activé dans `hosts/live-iso.nix` |
 | `modules/epiviosi-modules.nix` | Options `epiviosi.{wiki,medic,maps,security}.enable` pour les autres modules |
 | `pkgs/epiviosi-persist/` | Outil `epiviosi-persist-setup` |
 | `assets/` | Logo et fond d'écran |

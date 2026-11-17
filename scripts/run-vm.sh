@@ -6,19 +6,23 @@
 #   --persist       ajoute un disque .vm/persist.qcow2 (à formater EPIVIOSI-DATA)
 #   --wiki          ajoute un disque exFAT EPIV-WIKI (.vm/wiki.img) contenant
 #                   les .zim du dossier .vm/zim/ (copiés via udisksctl)
+#   --maps          ajoute un disque exFAT EPIV-MAPS (.vm/maps.img) contenant
+#                   le dossier .vm/maps/ (ex. .vm/maps/organicmaps/260527/*.mwm)
 #   --offline       pas de carte réseau (vérifier le fonctionnement hors-ligne)
-#   --headless      pas de fenêtre ; moniteur QEMU sur .vm/monitor.sock
+#   --headless      pas de fenêtre ; moniteur QEMU sur .vm/monitor.sock et
+#                   QMP sur .vm/qmp.sock (tests automatisés : clavier, souris)
 #   --iso FICHIER   ISO à utiliser (défaut : result/iso/*.iso)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-mode=uefi usb=0 persist=0 wiki=0 offline=0 headless=0 iso=""
+mode=uefi usb=0 persist=0 wiki=0 maps=0 offline=0 headless=0 iso=""
 while [ $# -gt 0 ]; do
   case "$1" in
     uefi|bios) mode="$1" ;;
     --usb) usb=1 ;;
     --persist) persist=1 ;;
     --wiki) wiki=1 ;;
+    --maps) maps=1 ;;
     --offline) offline=1 ;;
     --headless) headless=1 ;;
     --iso) iso="$2"; shift ;;
@@ -35,7 +39,7 @@ fi
 mkdir -p .vm
 args=(-enable-kvm -cpu host -m 4096 -smp 2
       -vga virtio
-      -device qemu-xhci)
+      -device qemu-xhci -device usb-tablet)
 
 if [ "$offline" = 1 ]; then
   args+=(-nic none)
@@ -67,41 +71,42 @@ if [ "$persist" = 1 ]; then
   args+=(-drive "if=virtio,format=qcow2,file=.vm/persist.qcow2")
 fi
 
-# Disque wiki : un système de fichiers exFAT sur tout le disque, reconstruit
-# quand le contenu de .vm/zim/ change. La copie passe par udisksctl (montage
-# en loop sans sudo).
-make_wiki_img() {
-  local zims=(.vm/zim/*.zim) size dev mp
-  local bytes=0 f
-  for f in "${zims[@]}"; do bytes=$((bytes + $(stat -c %s "$f"))); done
+# Disques de données (wiki, cartes) : un système de fichiers exFAT sur tout le
+# disque, reconstruit quand le contenu du dossier source change. La copie passe
+# par udisksctl (montage en loop sans sudo).
+make_exfat_img() {  # ÉTIQUETTE IMAGE DOSSIER_SOURCE
+  local label="$1" img="$2" src="$3" bytes size dev mp
+  bytes="$(du -sb "$src" | cut -f1)"
   size=$(( (bytes / 1024 / 1024 / 1024) + 2 ))G
-  rm -f .vm/wiki.img
-  truncate -s "$size" .vm/wiki.img
-  mkfs.exfat -L EPIV-WIKI .vm/wiki.img >/dev/null
-  [ ${#zims[@]} -gt 0 ] || return 0
-  dev="$(udisksctl loop-setup --no-user-interaction -f .vm/wiki.img | grep -o '/dev/loop[0-9]*')"
+  rm -f "$img"
+  truncate -s "$size" "$img"
+  mkfs.exfat -L "$label" "$img" >/dev/null
+  [ -n "$(ls -A "$src")" ] || return 0
+  dev="$(udisksctl loop-setup --no-user-interaction -f "$img" | grep -o '/dev/loop[0-9]*')"
   sleep 1
   mp="$(findmnt -no TARGET "$dev" || true)"
   [ -n "$mp" ] || { udisksctl mount --no-user-interaction -b "$dev" >/dev/null; mp="$(findmnt -no TARGET "$dev")"; }
-  echo "Copie de ${#zims[@]} ZIM dans .vm/wiki.img…"
-  cp "${zims[@]}" "$mp/"
+  echo "Copie de $src dans $img…"
+  cp -r "$src"/. "$mp/"
   udisksctl unmount --no-user-interaction -b "$dev" >/dev/null
   # udisks libère souvent le périphérique loop dès le démontage.
   udisksctl loop-delete --no-user-interaction -b "$dev" >/dev/null 2>&1 || true
 }
 
-if [ "$wiki" = 1 ]; then
-  shopt -s nullglob
-  mkdir -p .vm/zim
-  if [ ! -f .vm/wiki.img ] || [ -n "$(find .vm/zim -newer .vm/wiki.img -print -quit)" ]; then
-    make_wiki_img
+data_disk() {  # ÉTIQUETTE IMAGE DOSSIER_SOURCE
+  mkdir -p "$3"
+  if [ ! -f "$2" ] || [ -n "$(find "$3" -newer "$2" -print -quit)" ]; then
+    make_exfat_img "$@"
   fi
-  shopt -u nullglob
-  args+=(-drive "if=virtio,format=raw,file=.vm/wiki.img")
-fi
+  args+=(-drive "if=virtio,format=raw,file=$2")
+}
+
+[ "$wiki" = 1 ] && data_disk EPIV-WIKI .vm/wiki.img .vm/zim
+[ "$maps" = 1 ] && data_disk EPIV-MAPS .vm/maps.img .vm/maps
 
 if [ "$headless" = 1 ]; then
   args+=(-display none -monitor "unix:.vm/monitor.sock,server,nowait"
+         -qmp "unix:.vm/qmp.sock,server,nowait"
          -serial file:.vm/serial.log)
 else
   args+=(-display gtk)

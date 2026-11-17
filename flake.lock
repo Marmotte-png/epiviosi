@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "epiviosi-maps": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794927250,
+        "narHash": "sha256-L2HBlzLiDqFQ/gOZ1p8m4XPIa/me5V/9r+9yZ+pNtm8=",
+        "owner": "Marmotte-png",
+        "repo": "epiviosi-maps",
+        "rev": "0b4b677bab5101ed12c659747fdd6826b88afe42",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Marmotte-png",
+        "repo": "epiviosi-maps",
+        "type": "github"
+      }
+    },
     "epiviosi-wiki": {
       "inputs": {
         "nixpkgs": [
@@ -38,6 +58,7 @@
     },
     "root": {
       "inputs": {
+        "epiviosi-maps": "epiviosi-maps",
         "epiviosi-wiki": "epiviosi-wiki",
         "nixpkgs": "nixpkgs"
       }
