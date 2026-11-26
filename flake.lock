@@ -40,6 +40,26 @@
         "type": "github"
       }
     },
+    "epiviosi-news": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795684085,
+        "narHash": "sha256-E0YD5siSoZgZTY8870J0DFTMjhUHU3B46kqSceDzbN0=",
+        "owner": "Marmotte-png",
+        "repo": "epiviosi-news",
+        "rev": "b98b21e8506ad019dfb2be0ee9f5aa250abf843c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Marmotte-png",
+        "repo": "epiviosi-news",
+        "type": "github"
+      }
+    },
     "epiviosi-security": {
       "inputs": {
         "nixpkgs": [
@@ -100,6 +120,7 @@
       "inputs": {
         "epiviosi-maps": "epiviosi-maps",
         "epiviosi-medic": "epiviosi-medic",
+        "epiviosi-news": "epiviosi-news",
         "epiviosi-security": "epiviosi-security",
         "epiviosi-wiki": "epiviosi-wiki",
         "nixpkgs": "nixpkgs"
