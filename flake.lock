@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794948049,
-        "narHash": "sha256-WN9LstsmTddXpThCFa9ZLQJE7noShNmBR781ePM2gRE=",
+        "lastModified": 1795714808,
+        "narHash": "sha256-ddJrjfLxcg5CPhjsunwXoUxGd8/D6i0FwLhr50PBDI4=",
         "owner": "Marmotte-png",
         "repo": "epiviosi-maps",
-        "rev": "f10eb2251661a98b80d5bddbfef0d5dfe9e4ba2e",
+        "rev": "b671e5b54199ef291af70504a1ad52907f3c725b",
         "type": "github"
       },
       "original": {
@@ -47,11 +47,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795684085,
-        "narHash": "sha256-E0YD5siSoZgZTY8870J0DFTMjhUHU3B46kqSceDzbN0=",
+        "lastModified": 1795712429,
+        "narHash": "sha256-3hzTLDmsqE5Fk7wA/GKksNYaa9W97kNesQZ/orvTYkg=",
         "owner": "Marmotte-png",
         "repo": "epiviosi-news",
-        "rev": "b98b21e8506ad019dfb2be0ee9f5aa250abf843c",
+        "rev": "0e6a31eee06a6c8717f2a364a9860c8e5b295c0e",
         "type": "github"
       },
       "original": {
