@@ -25,6 +25,7 @@
   epiviosi.maps.enable = true;
   epiviosi.security.enable = true;
   epiviosi.medic.enable = true;
+  epiviosi.news.enable = true;
 
   system.stateVersion = "26.05";
 }
