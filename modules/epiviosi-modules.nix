@@ -1,5 +1,5 @@
 # Options communes à la suite EPIVÍOSI.
-# Les dépôts epiviosi-{wiki,medic,maps,security} fourniront chacun un
+# Les dépôts epiviosi-{wiki,medic,maps,security,news} fourniront chacun un
 # `nixosModules.default` qui implémentera l'option correspondante.
 { lib, ... }:
 {
@@ -13,5 +13,6 @@
     medic.enable = lib.mkEnableOption "EPIVÍOSI MEDIC (dossiers médicaux et premiers secours)";
     maps.enable = lib.mkEnableOption "EPIVÍOSI MAPS (cartes OpenStreetMap hors-ligne)";
     security.enable = lib.mkEnableOption "EPIVÍOSI SECURITY (cybersécurité et cryptographie)";
+    news.enable = lib.mkEnableOption "EPIVÍOSI NEWS (rédaction chiffrée pour journalistes)";
   };
 }

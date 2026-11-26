@@ -4,7 +4,8 @@ Système live hors-ligne basé sur NixOS (x86_64), socle de la suite EPIVÍOSI :
 [wiki](https://github.com/Marmotte-png/epiviosi-wiki),
 [medic](https://github.com/Marmotte-png/epiviosi-medic),
 [maps](https://github.com/Marmotte-png/epiviosi-maps),
-[security](https://github.com/Marmotte-png/epiviosi-security).
+[security](https://github.com/Marmotte-png/epiviosi-security),
+[news](https://github.com/Marmotte-png/epiviosi-news).
 
 ## Caractéristiques
 
@@ -118,6 +119,16 @@ bilan secouriste, suivi de traitement), et `epiviosi-medic-docs` pour ajouter
 au wiki ≈ 4,4 Go de documentation médicale (MDWiki, MedlinePlus, NHS…).
 Le module est fourni par [epiviosi-medic](https://github.com/Marmotte-png/epiviosi-medic).
 
+## Journalisme (EPIVÍOSI NEWS)
+
+**Rédaction** : coffre chiffré dans `~/Persistant` (phrase de passe), ouvert dans
+`~/Rédaction`, avec des modèles LibreOffice (article, dépêche, journal de terrain,
+fiche source). Import de photos, vidéos et sons : l'original est gardé avec son
+empreinte SHA-256, une copie sans métadonnées (GPS, appareil…) est prête à publier.
+Retouche avec GIMP (flouter visages et plaques), envoi en archive 7-Zip chiffrée
+et nettoyée, et **Verrouiller la rédaction** pour fermer le coffre en urgence.
+Le module est fourni par [epiviosi-news](https://github.com/Marmotte-png/epiviosi-news).
+
 ## Traduction hors-ligne (Firefox)
 
 Firefox propose de traduire les pages anglaises en français (et inversement)
@@ -165,8 +176,9 @@ intactes, et refusent proprement s'il n'y a plus de place.
 | `epiviosi-maps` (entrée du flake) | Module EPIVÍOSI MAPS (Organic Maps), activé dans `hosts/live-iso.nix` |
 | `epiviosi-security` (entrée du flake) | Module EPIVÍOSI SECURITY, activé dans `hosts/live-iso.nix` |
 | `epiviosi-medic` (entrée du flake) | Module EPIVÍOSI MEDIC, activé dans `hosts/live-iso.nix` |
+| `epiviosi-news` (entrée du flake) | Module EPIVÍOSI NEWS, activé dans `hosts/live-iso.nix` |
 | `modules/firefox-translations/` | Traduction FR ↔ EN hors-ligne dans Firefox |
-| `modules/epiviosi-modules.nix` | Options `epiviosi.{wiki,medic,maps,security}.enable` pour les autres modules |
+| `modules/epiviosi-modules.nix` | Options `epiviosi.{wiki,medic,maps,security,news}.enable` pour les autres modules |
 | `pkgs/epiviosi-persist/` | Outil `epiviosi-persist-setup` |
 | `assets/` | Logo et fond d'écran |
 | `scripts/` | Construction et tests en VM |
